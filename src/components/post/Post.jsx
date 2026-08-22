@@ -145,7 +145,12 @@ const Post = React.forwardRef(
               cursor: "pointer",
             }}
             onClick={() => {
-              navigate(`/app/post/${slugify(post.title)}-${post.id}`);
+              if(!isMD) {
+                return;
+              }else {
+                navigate(`/app/post/${slugify(post.title)}-${post.id}`);
+              }
+              
             }}
           >
             <div className="textContainer">
