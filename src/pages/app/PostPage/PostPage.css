@@ -116,15 +116,18 @@ hr {
   }
 
   & blockquote {
-   padding: 5px 5px 1px 10px;
-    border-left: 3px solid rgb(55, 136, 255);
-    border-radius: 0 8px 8px 0;
-    
+    padding-block: 5px 1px;
+    padding-inline: 10px 5px;
+    border-inline-start: 3px solid rgb(55, 136, 255);
+    border-start-start-radius: 0;
+    border-start-end-radius: 8px;
+    border-end-end-radius: 8px;
+    border-end-start-radius: 0;
+    direction: auto;
+
     background-color: var(--quote-bg);
     margin-bottom: 1.7rem;
   }
-
- 
 
   & ul {
     display: block;
@@ -133,10 +136,9 @@ hr {
     padding-left: 2rem !important;
 
     & li {
-     
-     display: list-item !important;
+      display: list-item !important;
       list-style-type: disc !important;
-      cursor:auto;
+      cursor: auto;
       font-weight: 500;
     }
   }
@@ -342,8 +344,6 @@ pre {
     scale: 1;
   }
 }
-
-
 
 @media (max-width: 768px) {
   .post-page-title {
