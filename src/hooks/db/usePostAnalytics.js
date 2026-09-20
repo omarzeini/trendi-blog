@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
 import supabase from "../../lib/supabase";
+import useAlert from "../useAlert";
 
 const usePostAnalytics = (blogId, user) => {
   const hasReadBeenSent = useRef(false);
   const hasViewBeenSent = useRef(false);
   const startTime = useRef(Date.now());
+  const showToast = useAlert();
 
   useEffect(() => {
     if (!blogId || hasViewBeenSent.current) return;
@@ -13,7 +15,28 @@ const usePostAnalytics = (blogId, user) => {
 
     const insertView = async () => {
       try {
-        const { data, error } = await supabase
+        const { data: author, error: authorErr } = await supabase
+          .from("blogs")
+          .select("user_id")
+          .eq("id", blogId);
+
+        if (authorErr) {
+          console.log("Network or Server Error", authorErr);
+          showToast(
+            "err",
+            "Something went wrong, Please refresh the page",
+            true,
+          );
+          return;
+        }
+
+        if (user) {
+          if (user?.id === author[0].user_id) {
+            return;
+          }
+        }
+
+        const { error } = await supabase
           .from("blog_views")
           .insert({
             blog_id: blogId,

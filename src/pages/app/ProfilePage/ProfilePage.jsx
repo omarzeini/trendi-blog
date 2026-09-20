@@ -1,9 +1,10 @@
 import "./ProfilePage.css";
 //ICONS
-import Edit from "../../../icons/Edit";
-import Add from "../../../icons/Add";
-import ImgIcon from "../../../icons/ImageIcon";
-import DeleteIcon from "../../../icons/delete-icon";
+// import Edit from "../../../icons/Edit";
+// import Add from "../../../icons/Add";
+// import ImgIcon from "../../../icons/ImageIcon";
+// import DeleteIcon from "../../../icons/delete-icon";
+import AlertIcon from "../../../icons/alert-icon"
 //COMPONENTS
 import Loader from "../../../components/ui/loader";
 import Notify from "../../../components/ui/notify";
@@ -11,15 +12,15 @@ import PicturePreview from "../../../components/ui/picture-preview";
 import Post from "../../../components/post/Post";
 import InsightsDisplay from "../../../components/ui/insightsDisplay";
 //HOOKS
-import useAlert from "../../../hooks/useAlert";
-import useUploadAvatar from "../../../hooks/db/useUploadAvatar";
+// import useAlert from "../../../hooks/useAlert";
+// import useUploadAvatar from "../../../hooks/db/useUploadAvatar";
 import useClickOutside from "../../../hooks/useClickOutside";
 //HELPERS
 import getAvatarUrl from "../../../utils/getAvatarUrl";
-import deleteAvatar from "../../../utils/deleteAvatar";
-import getUser from "../../../utils/getUser";
+// import deleteAvatar from "../../../utils/deleteAvatar";
+// import getUser from "../../../utils/getUser";
 //REACT AND OTHER
-import { useNavigate, Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import supabase from "../../../lib/supabase";
 import { useEffect, useState, Activity, useRef } from "react";
 import { useStoreState, useStoreActions } from "easy-peasy";
@@ -34,6 +35,7 @@ function ProfilePage() {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [postsLoading, setPostsLoading] = useState(false);
+  const [profileNotFound, setProfileNotFound] = useState(false);
 
   const showPicturePreview = useStoreState((state) => state.showPicturePreview);
   const setShowPicturePreview = useStoreActions(
@@ -43,9 +45,9 @@ function ProfilePage() {
 
   const imgMenuRef = useRef();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const alert = useAlert();
+  // const alert = useAlert();
 
   const { username: routeUsername } = useParams();
 
@@ -53,7 +55,7 @@ function ProfilePage() {
 
   useClickOutside(imgMenuRef, () => setShowAvatarMenu(false));
 
-  const uploadAvatar = useUploadAvatar();
+  //const uploadAvatar = useUploadAvatar();
 
   useEffect(() => {
     let isMounted = true;
@@ -86,6 +88,7 @@ function ProfilePage() {
             setUser(null);
             setPosts([]);
             setError("User not found, Check your spelling");
+            setProfileNotFound(true)
           }
           return;
         }
@@ -145,6 +148,34 @@ function ProfilePage() {
 
   if (loading) return <Loader />;
   return (
+    profileNotFound ? 
+     
+     <section className="user-not-found-section">
+      <figure className="user-not-found-profile-preview">
+            <img
+              width={"100px"}
+              height={"100px"}
+              onClick={() => {
+                setOverlayOn(true);
+                setShowPicturePreview(true);
+              }}
+              src={getAvatarUrl(user?.avatar)}
+              alt=""
+            />
+          </figure>
+      <div className="user-not-found-feedback-container">
+          <p>User Not Found, Check Your Spelling.</p>
+
+          <p>
+              
+              <AlertIcon width={"50px"} height={"50px"} color={'var(--primary)'} />
+
+            No user was found with this username. Please double check the username used to find the user.</p>
+      </div>
+      </section>
+    
+
+    :
     <section className="profile-main">
       <Activity mode={showPicturePreview ? "visible" : "hidden"}>
         <PicturePreview src={getAvatarUrl(user?.avatar)} />
