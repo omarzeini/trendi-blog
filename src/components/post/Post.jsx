@@ -6,6 +6,7 @@ import GlobalBookmark from "../../icons/global-bookmark";
 import FilledBookmark from "../../icons/filled-global-bookmark";
 import Edit from "../../icons/Edit";
 import Delete from "../../icons/delete-icon";
+import Eye from "../../icons/Eye";
 
 import { useStoreState, useStoreActions } from "easy-peasy";
 import getAvatarUrl from "../../utils/getAvatarUrl";
@@ -29,6 +30,7 @@ const Post = React.forwardRef(
       post,
       showActions = false,
       onDeleteSuccess,
+      blogViews 
     },
     ref,
   ) => {
@@ -79,7 +81,11 @@ const Post = React.forwardRef(
         <div ref={ref} className={`postContainer ${variant}--postContainer`}>
           <Activity mode={showActions ? "visible" : "hidden"}>
             <ActionButtons>
-              <ActionButton
+              <ActionButton $isPointer={false}>
+                  {/* <Eye width={"15px"} height={"15px"} color={"white"} /> */}
+                  views : {blogViews || 0}
+              </ActionButton>
+              <ActionButton $isPointer={true}
                 onClick={() => {
                   navigate(`/app/write/${post.id}`);
                 }}
@@ -88,7 +94,7 @@ const Post = React.forwardRef(
                 <Edit width={"15px"} height={"15px"} color={"white"} /> Edit
               </ActionButton>
 
-              <ActionButton
+              <ActionButton $isPointer={true}
                 onClick={() => {
                   setOverlayOn(true);
                   setShowModel(true);
@@ -270,5 +276,5 @@ const ActionButton = styled.button`
   padding: 10px;
   padding-block: 5px;
   border-radius: 8px;
-  cursor: pointer;
+  cursor: ${({$isPointer}) => $isPointer ? "pointer" : "auto" };
 `;

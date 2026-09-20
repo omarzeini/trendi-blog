@@ -115,6 +115,7 @@ function MyProfilePage() {
 
         if (isMounted) {
           setPosts(profilePosts ?? []);
+          
         }
       } catch (err) {
         if (isMounted) {
@@ -362,6 +363,7 @@ function MyProfilePage() {
                 key={post.id}
                 showActions={isOwner ? true : false}
                 onDeleteSuccess={handlePostDeleted}
+                blogViews={post.blog_views}
               />
             ))}
           </div>

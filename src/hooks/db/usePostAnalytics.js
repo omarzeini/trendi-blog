@@ -15,10 +15,11 @@ const usePostAnalytics = (blogId, user) => {
 
     const insertView = async () => {
       try {
-        const { data: author, error: authorErr } = await supabase
+        const { data: blog, error: authorErr } = await supabase
           .from("blogs")
-          .select("user_id")
-          .eq("id", blogId);
+          .select("user_id, blog_views")
+          .eq("id", blogId)
+          .single();
 
         if (authorErr) {
           console.log("Network or Server Error", authorErr);
@@ -30,13 +31,11 @@ const usePostAnalytics = (blogId, user) => {
           return;
         }
 
-        if (user) {
-          if (user?.id === author[0].user_id) {
-            return;
-          }
+        if (user?.id === blog.user_id) {
+          return;
         }
 
-        const { error } = await supabase
+        const { error: viewError } = await supabase
           .from("blog_views")
           .insert({
             blog_id: blogId,
@@ -44,7 +43,11 @@ const usePostAnalytics = (blogId, user) => {
           })
           .select();
 
-        if (error) console.error("Error inserting blog view:", error);
+        if (viewError) {
+          console.error("Error inserting blog view:", viewError);
+          return;
+        }
+
         // console.log(
         //   "view should be registered",
         //   data,
@@ -65,6 +68,22 @@ const usePostAnalytics = (blogId, user) => {
     if (!blogId || hasReadBeenSent.current) return;
 
     const checkReadConditions = async () => {
+      const { data: blog, error: authorErr } = await supabase
+        .from("blogs")
+        .select("user_id")
+        .eq("id", blogId)
+        .single();
+
+      if (authorErr) {
+        console.log("Network or Server Error", authorErr);
+        showToast("err", "Something went wrong, Please refresh the page", true);
+        return;
+      }
+
+      if (user?.id === blog.user_id) {
+        return;
+      }
+
       if (hasReadBeenSent.current) return;
 
       const timeSpent = (Date.now() - startTime.current) / 1000;

@@ -343,6 +343,8 @@ pre {
   }
 }
 
+
+
 @media (max-width: 768px) {
   .post-page-title {
     font-size: 2rem !important;
@@ -406,6 +408,12 @@ pre {
     & button:disabled {
       scale: 1;
     }
+  }
+}
+
+@media (max-width: 600px) {
+  .post-page-title {
+    font-size: 1.5rem !important;
   }
 }
 
