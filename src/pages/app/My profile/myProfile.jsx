@@ -4,6 +4,7 @@ import Edit from "../../../icons/Edit";
 import Add from "../../../icons/Add";
 import ImgIcon from "../../../icons/ImageIcon";
 import DeleteIcon from "../../../icons/delete-icon";
+import AlertIcon from "../../../icons/alert-icon";
 //COMPONENTS
 import Loader from "../../../components/ui/loader";
 import Notify from "../../../components/ui/notify";
@@ -34,6 +35,7 @@ function MyProfilePage() {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [postsLoading, setPostsLoading] = useState(false);
+  const [profileNotFound, setProfileNotFound] = useState(false);
 
   const showPicturePreview = useStoreState((state) => state.showPicturePreview);
   const setShowPicturePreview = useStoreActions(
@@ -86,6 +88,7 @@ function MyProfilePage() {
             setUser(null);
             setPosts([]);
             setError("User not found Please try refreshing the page");
+            setProfileNotFound(true);
           }
           return;
         }
@@ -195,6 +198,34 @@ function MyProfilePage() {
 
   if (loading) return <Loader />;
   return (
+     profileNotFound ? 
+         
+         <section className="user-not-found-section">
+          <figure className="user-not-found-profile-preview">
+                <img
+                  width={"100px"}
+                  height={"100px"}
+                  onClick={() => {
+                    setOverlayOn(true);
+                    setShowPicturePreview(true);
+                  }}
+                  src={getAvatarUrl(user?.avatar)}
+                  alt=""
+                />
+              </figure>
+          <div className="user-not-found-feedback-container">
+              <p>User Not Found</p>
+    
+              <p>
+                  
+                  <AlertIcon width={"50px"} height={"50px"} color={'var(--primary)'} />
+    
+                Looks like there might be a usename typo in the url, try double checking your username</p>
+          </div>
+          </section>
+        
+    
+        :
     <section className="profile-main">
       <Activity mode={showPicturePreview ? "visible" : "hidden"}>
         <PicturePreview src={getAvatarUrl(user?.avatar)} />
