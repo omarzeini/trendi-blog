@@ -70,11 +70,18 @@ const Feed = () => {
 
   //const posts = useStoreState((state) => state.posts);
 
+  // const slugify = (text) =>
+  //   text
+  //     .toLowerCase()
+  //     .replace(/[^a-z0-9]+/g, "-")
+  //     .replace(/(^-|-$)+/g, "");
+
   const slugify = (text) =>
     text
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)+/g, "");
+      .trim()
+      .replace(/[^\p{L}\p{N}]+/gu, "-")
+      .replace(/^-+|-+$/g, "");
 
   return (
     <StyledMain>
@@ -109,21 +116,20 @@ const Feed = () => {
                 fontSize: "1.5rem",
               }}
             >
-              <p>
-              No Blogs found now{" "} </p>
-              <span style={{marginLeft: "1rem", display: "block"}}>
-              <Link
-                style={{ color: "var(--primary)", fontWeight: "500" }}
-                to={"/app/write"}
-              >
-                {" "}
-                Write a blog{" "}
-                <RightArrow
-                  height="20px"
-                  width="20px"
-                  color="var(--primary)"
-                />{" "}
-              </Link>{" "}
+              <p>No Blogs found now </p>
+              <span style={{ marginLeft: "1rem", display: "block" }}>
+                <Link
+                  style={{ color: "var(--primary)", fontWeight: "500" }}
+                  to={"/app/write"}
+                >
+                  {" "}
+                  Write a blog{" "}
+                  <RightArrow
+                    height="20px"
+                    width="20px"
+                    color="var(--primary)"
+                  />{" "}
+                </Link>{" "}
               </span>
             </NoBlogs>
           </>
@@ -150,13 +156,12 @@ export default Feed;
 const NoBlogs = styled.div`
   display: flex;
   justify-content: center;
-  align-items:center;
+  align-items: center;
   flex-direction: row;
   font-size: 1.5rem;
   gap: 1rem;
 
   @media (max-width: 500px) {
     flex-direction: column;
-
   }
-`
+`;

@@ -53,11 +53,12 @@ const Post = React.forwardRef(
     const navigate = useNavigate();
     const Alert = useAlert();
 
-    const slugify = (text) =>
-      text
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)+/g, "");
+   const slugify = (text) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/^-+|-+$/g, "");
 
     if (!post || post === null) {
       return (
